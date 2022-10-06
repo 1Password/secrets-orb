@@ -10,5 +10,6 @@ parameters:
     default: "World"
     description: "Hello to whom?"
 steps:
-  - greet:
-      to: << parameters.to >>
+  - run:
+      command: |
+        echo "hello << parameters.to >>""

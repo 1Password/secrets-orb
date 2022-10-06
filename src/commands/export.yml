@@ -11,7 +11,7 @@ parameters:
     description: Reference to where the secret is stored in 1Password
 
 steps:
-  - install
+  - install-op
   - run:
       name: Load secret << parameters.var-name >>
       command: |
