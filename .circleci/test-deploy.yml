@@ -10,18 +10,55 @@ filters: &filters
 jobs:
   # Create a job to test the commands of your orbs.
   # You may want to add additional validation steps to ensure the commands are working as expected.
-  command-tests:
+  integration-test-exec:
+    docker:
+      - image: cimg/base:current
+    environment: 
+      SECRET: op://acceptance-tests/test-secret/password
+      SECRET_IN_SECTION: op://acceptance-tests/test-secret/test-section/password
+      MULTILINE_SECRET: op://acceptance-tests/multiline-secret/notesPlain
+    steps:
+      - checkout
+      # Run your orb's commands to validate them.
+      - secrets/install-op
+      - run:
+          name: 1Password CLI should be installed
+          command: op --version
+      - secrets/exec:
+          step-name: "Validate secret injection at runtime"
+          command: <<include(scripts/assert-env-set.sh)>>
+          
+  integration-test-export:
     docker:
       - image: cimg/base:current
     steps:
       - checkout
       # Run your orb's commands to validate them.
-      - secrets/greet
+      - secrets/install-op
+      - run:
+          name: 1Password CLI should be installed
+          command: op --version
+      - secrets/export:
+          var-name: SECRET
+          secret-reference: op://acceptance-tests/test-secret/password
+      - secrets/export:
+          var-name: SECRET_IN_SECTION
+          secret-reference: op://acceptance-tests/test-secret/test-section/password
+      - secrets/export:
+          var-name: MULTILINE_SECRET
+          secret-reference: op://acceptance-tests/multiline-secret/notesPlain
+      - run:
+          name: validate exported environment variables
+          sommand: <<include(scripts/assert-env-set.sh)>>
+
+
 workflows:
   test-deploy:
     jobs:
       # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
-      - command-tests:
+      - integratoin-test-exec:
+          filters: *filters
+      - integratoin-test-export:
           filters: *filters
       - orb-tools/pack:
           filters: *filters
@@ -31,7 +68,8 @@ workflows:
           pub-type: production
           requires:
             - orb-tools/pack
-            - command-tests
+            - integration-test-exec
+            - integration-test-export
           context: orb-publishing
           filters:
             branches:
