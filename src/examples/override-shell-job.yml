@@ -1,0 +1,32 @@
+description: >
+  Install the op CLI and use it as shell at a job level.
+  In this way, secret injection in other orbs is possible.
+usage:
+  version: 2.1
+  orbs:
+    1password: onepassword/secrets@0.1.0
+    docker: circleci/docker@1.0.0
+  jobs:
+    deploy:
+      machine:
+        image: ubuntu-2204:current
+      environment:
+        AWS_ACCESS_KEY_ID: op://company/app/aws/access_key_id
+        AWS_SECRET_ACCESS_KEY: op://company/app/aws/secret_access_key
+      shell: op run -- /bin/bash
+      steps:
+        - 1password/install
+        - checkout
+        - docker/build:
+            step-name: build image
+            image: company/app
+            tag: ${CIRCLE_SHA1:0:7}
+        - docker/push:
+            step-name: publish image
+            image: company/app
+            tag: ${CIRCLE_SHA1:0:7}
+
+  workflows:
+    deploy:
+      jobs:
+        - deploy

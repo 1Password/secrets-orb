@@ -1,0 +1,26 @@
+description: >
+  Use the 1password/exec command to install the op CLI, load secrets on demand and execute commands requiring secrets.
+  Sensitive values that may be accidentally logged will be masked.
+usage:
+  version: 2.1
+  orbs:
+    1password: onepassword/secrets@0.1.0
+  jobs:
+    deploy:
+      machine:
+        image: ubuntu-2204:current
+      environment:
+        AWS_ACCESS_KEY_ID: op://company/app/aws/access_key_id
+        AWS_SECRET_ACCESS_KEY: op://company/app/aws/secret_access_key
+      steps:
+        - checkout
+        - 1password/exec:
+            command: |
+              echo "This value will be masked: $AWS_ACCESS_KEY_ID"
+              echo "This value will be masked: $AWS_SECRET_ACCESS_KEY"
+              ./deploy-my-app.sh
+  
+  workflows:
+    deploy:
+      jobs:
+        - deploy
