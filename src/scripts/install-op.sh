@@ -1,3 +1,5 @@
+# shellcheck disable=SC2148
+# shellcheck disable=SC2034
 # Colors
 NO_COLOR="\033[0m"
 OK_COLOR="\033[32;01m"
