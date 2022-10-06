@@ -8,7 +8,7 @@ parameters:
     description: Path where op CLI will be installed
   shell:
     type: string
-    default: /bin/sh -eo pipefail
+    default: /bin/bash -eo pipefail
     description: The shell used to run the install script
 
 steps:
