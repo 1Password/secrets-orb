@@ -1,0 +1,22 @@
+description: >
+  Load a secret and make it available as an environment variable for next steps in the job.
+  Unlike the 1password/exec command, 1password/export does not conceal secrets from the logs.
+
+parameters:
+  var-name:
+    type: string
+    description: Name of the environment variable to populate with the secret
+  secret-reference:
+    type: string
+    description: Reference to where the secret is stored in 1Password
+
+steps:
+  - install
+  - run:
+      name: Load secret << parameters.var-name >>
+      command: |
+        random_heredoc_identifier=$(cat /dev/urandom | env LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1) || true
+        printf 'export << parameters.var-name >>=$(cat \<<' >> $BASH_ENV
+        printf "${random_heredoc_identifier}\n" >> $BASH_ENV
+        op read << parameters.secret-reference >> >> $BASH_ENV
+        printf "${random_heredoc_identifier}\n)\n" >> $BASH_ENV
