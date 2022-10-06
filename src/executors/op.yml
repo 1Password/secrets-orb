@@ -1,0 +1,11 @@
+description: >
+  This executor uses a Docker container which includes the 1Password CLI.
+docker:
+  - image: '1password/op:<<parameters.tag>>'
+parameters:
+  tag:
+    default: latest
+    description: >
+      Pick a specific 1Password CLI image variant:
+      https://hub.docker.com/r/1password/op/tags
+    type: string
