@@ -26,7 +26,7 @@ jobs:
           command: op --version
       - secrets/exec:
           step-name: "Validate secret injection at runtime"
-          command: <<include(scripts/assert-env-set.sh)>>
+          command: ./test/assert-env-set.sh
           
   integration-test-export:
     docker:
@@ -49,7 +49,7 @@ jobs:
           secret-reference: op://acceptance-tests/multiline-secret/notesPlain
       - run:
           name: validate exported environment variables
-          sommand: <<include(scripts/assert-env-set.sh)>>
+          sommand: ./test/assert-env-set.sh
 
 
 workflows:
