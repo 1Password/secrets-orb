@@ -22,7 +22,7 @@ jobs:
       - run:
           command: echo $OP_CREDENTIALS >> 1password-credentials.json
       - run:
-          command: docker-compose -f test/docker-compose.yml up -d
+          command: docker-compose -f test/docker-compose.yaml up -d
       # Run your orb's commands to validate them.
       - secrets/install-op
       - run:
@@ -40,7 +40,7 @@ jobs:
       - run:
           command: echo $OP_CREDENTIALS >> 1password-credentials.json
       - run:
-          command: docker-compose -f test/docker-compose.yml up -d
+          command: docker-compose -f test/docker-compose.yaml up -d
       # Run your orb's commands to validate them.
       - secrets/install-op
       - run:
