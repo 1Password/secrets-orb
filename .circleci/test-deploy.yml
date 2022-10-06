@@ -12,7 +12,7 @@ jobs:
   # You may want to add additional validation steps to ensure the commands are working as expected.
   integration-test-exec:
     machine:
-      - image: ubuntu-2204:current
+      image: ubuntu-2204:current
     environment:
       SECRET: op://acceptance-tests/test-secret/password
       SECRET_IN_SECTION: op://acceptance-tests/test-secret/test-section/password
@@ -34,7 +34,7 @@ jobs:
           
   integration-test-export:
     machine:
-      - image: ubuntu-2204:current
+      image: ubuntu-2204:current
     steps:
       - checkout
       - run:
