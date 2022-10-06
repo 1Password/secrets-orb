@@ -1,0 +1,20 @@
+description: >
+  Install the 1Password CLI.
+
+parameters:
+  path:
+    type: string
+    default: /usr/local/bin/
+    description: Path where op CLI will be installed
+  shell:
+    type: string
+    default: /bin/sh -eo pipefail
+    description: The shell used to run the install script
+
+steps:
+  - run:
+      environment:
+        PARAM_PATH: <<parameters.path>>
+      shell: <<parameters.shell>>
+      name: Install 1Password CLI
+      command: <<include(scripts/install-op.sh)>>
