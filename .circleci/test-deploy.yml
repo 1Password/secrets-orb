@@ -19,6 +19,10 @@ jobs:
       MULTILINE_SECRET: op://acceptance-tests/multiline-secret/notesPlain
     steps:
       - checkout
+      - run:
+          command: echo $CREDENTIALS >> 1password-credentials.json
+      - run:
+          command: docker-compose -f test-dependencies/docker-compose.yml up -d
       # Run your orb's commands to validate them.
       - secrets/install-op
       - run:
@@ -33,6 +37,10 @@ jobs:
       - image: cimg/base:current
     steps:
       - checkout
+      - run:
+          command: echo $CREDENTIALS >> 1password-credentials.json
+      - run:
+          command: docker-compose -f test-dependencies/docker-compose.yml up -d
       # Run your orb's commands to validate them.
       - secrets/install-op
       - run:
@@ -76,3 +84,8 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+  integration-tests:
+    jobs:
+      - integration-test-exec
+      - integration-test-export
+
