@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  secrets: onepassword/secrets@dev:<<pipeline.git.revision>>
+  1password: onepassword/secrets@dev:<<pipeline.git.revision>>
   orb-tools: circleci/orb-tools@11.1
 
 filters: &filters
@@ -28,7 +28,7 @@ jobs:
       - run:
           name: 1Password CLI should be installed
           command: op --version
-      - secrets/exec:
+      - 1password/exec:
           step-name: "Validate secret injection at runtime"
           command: ./test/assert-env-set.sh
           
@@ -42,17 +42,17 @@ jobs:
       - run:
           command: docker-compose -f test/docker-compose.yaml up -d
       # Run your orb's commands to validate them.
-      - secrets/install-op
+      - 1password/install-op
       - run:
           name: 1Password CLI should be installed
           command: op --version
-      - secrets/export:
+      - 1password/export:
           var-name: SECRET
           secret-reference: op://acceptance-tests/test-secret/password
-      - secrets/export:
+      - 1password/export:
           var-name: SECRET_IN_SECTION
           secret-reference: op://acceptance-tests/test-secret/test-section/password
-      - secrets/export:
+      - 1password/export:
           var-name: MULTILINE_SECRET
           secret-reference: op://acceptance-tests/multiline-secret/notesPlain
       - run:
@@ -84,7 +84,3 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
-  # integration-tests:
-  #   jobs:
-  #     - integration-test-exec
-  #     - integration-test-export
