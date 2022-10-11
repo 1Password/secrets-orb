@@ -1,4 +1,3 @@
-
 description: >
   Install the op CLI within a job and make it useable for all the steps following the installation.
 usage:
@@ -16,7 +15,7 @@ usage:
             docker login -u $(op read op://company/docker/username) -p $(op read op://company/docker/password)
             docker build -t company/app:${CIRCLE_SHA1:0:7} .
             docker push company/app:${CIRCLE_SHA1:0:7}
-  
+
   workflows:
     deploy:
       jobs:

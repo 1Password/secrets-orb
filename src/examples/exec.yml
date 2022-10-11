@@ -19,7 +19,7 @@ usage:
               echo "This value will be masked: $AWS_ACCESS_KEY_ID"
               echo "This value will be masked: $AWS_SECRET_ACCESS_KEY"
               ./deploy-my-app.sh
-  
+
   workflows:
     deploy:
       jobs:
