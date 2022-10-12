@@ -29,7 +29,7 @@ Once you have a 1Password Connect host and token, configure `OP_CONNECT_HOST` an
 
 You can make secrets available to the CircleCI jobs/steps by including references to them in the environment. References are of the form `op://vault/item/[section]/field`.
 
-In order to install the `op` CLI within a CircleCI job, the `1password/install` command is available:
+In order to install the `op` CLI within a CircleCI job, the `1password/install-op` command is available:
 ```yml
 version: 2.1
 orbs:
@@ -40,7 +40,7 @@ jobs:
     machine:
         image: ubuntu-2204:current
     steps:
-      - 1password/install
+      - 1password/install-op
       - checkout
       - run:
           shell: op run -- /bin/bash
