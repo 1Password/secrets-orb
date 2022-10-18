@@ -19,7 +19,7 @@ steps:
   - run:
       environment:
         PARAM_PATH: <<parameters.path>>
-        OP_CLI_VERSION: <<parameters.path>>
+        PARAM_CLI_VERSION: <<parameters.path>>
       shell: <<parameters.shell>>
       name: Install 1Password CLI
       command: <<include(scripts/install-op.sh)>>

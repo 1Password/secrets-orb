@@ -6,6 +6,8 @@ OK_COLOR="\033[32;01m"
 ERROR_COLOR="\033[31;01m"
 WARN_COLOR="\033[33;01m"
 
+OP_CLI_VERSION="v${PARAM_CLI_VERSION}"
+
 # Make sure we have root priviliges.
 SUDO=""
 if [ "$(id -u)" -ne 0 ]; then
