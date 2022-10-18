@@ -1,4 +1,4 @@
-# shellcheck disable=SC2148
+#!/bin/bash
 random_heredoc_identifier=$(env LC_ALL=C tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 64 | head -n 1) || true
 {
     #shellcheck disable=SC2016

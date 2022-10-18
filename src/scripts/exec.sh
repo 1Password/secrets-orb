@@ -1,4 +1,4 @@
-# shellcheck disable=SC2148
+#!/bin/bash
 if [ -n "${PARAM_FLAGS}" ]; then
     op run "${PARAM_FLAGS}" -- "$SHELL" -c "${PARAM_COMMAND}"
 else

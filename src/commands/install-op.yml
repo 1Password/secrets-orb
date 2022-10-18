@@ -1,10 +1,10 @@
 description: >
-  Install the 1Password CLI.
+  Install the 1Password CLI. Defaults to latest stable version.
 
 parameters:
   version:
     type: string
-    default: 2.8.0-beta.04
+    default: 2.7.1
     description: Version of 1Password CLI that will be installed
   path:
     type: string
