@@ -8,7 +8,7 @@ WARN_COLOR="\033[33;01m"
 
 OP_CLI_VERSION=${PARAM_CLI_VERSION}
 if ! [[ ${OP_CLI_VERSION} == v* ]]; then
-    OP_CLI_VERSION="${PARAM_CLI_VERSION}"
+    OP_CLI_VERSION="v${PARAM_CLI_VERSION}"
 fi
 
 # Make sure we have root priviliges.
