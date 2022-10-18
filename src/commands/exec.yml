@@ -16,5 +16,7 @@ steps:
   - install-op
   - run:
       name: << parameters.step-name >>
-      command: |
-        op run << parameters.flags >> -- $SHELL -c '<< parameters.command >>'
+      environment:
+        PARAM_FLAGS: << parameters.flags >>
+        PARAM_COMMAND: << parameters.command >>
+      command: <<include(scripts/exec.sh)>>
