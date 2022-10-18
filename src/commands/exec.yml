@@ -2,7 +2,6 @@ description: Run a command with secret environment variables loaded from 1Passwo
 parameters:
   command:
     type: string
-    default: ''
     description: Command to execute with secrets
   step-name:
     type: string
