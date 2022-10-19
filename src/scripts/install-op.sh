@@ -26,6 +26,8 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         ARCH="386"
     elif [ "$ARCH" == "x86_64" ]; then
         ARCH="amd64"
+    elif [ "$ARCH" == "aarch64" ]; then
+        ARCH="arm64"
     fi
 
     echo "https://cache.agilebits.com/dist/1P/op2/pkg/${OP_CLI_VERSION}/op_linux_${ARCH}_${OP_CLI_VERSION}.zip"
