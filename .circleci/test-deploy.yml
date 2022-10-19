@@ -23,7 +23,7 @@ jobs:
       - checkout
       - when:
           condition: 
-            equal: [ docker, << parameters.os >>]
+            equal: [ *docker-executor, << parameters.os >> ]
           steps:
             - setup_remote_docker
       - run:
@@ -48,7 +48,7 @@ jobs:
       - checkout
       - when:
           condition: 
-            equal: [ docker, << parameters.os >>]
+            equal: [ *docker-executor, << parameters.os >> ]
           steps:
             - setup_remote_docker
       - run:
@@ -106,7 +106,7 @@ workflows:
               only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
 executors:
-  docker:
+  docker: &docker-executor
     docker:
       - image: cimg/base:current
   linux-arm:

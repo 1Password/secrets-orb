@@ -28,6 +28,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         ARCH="amd64"
     fi
 
+    echo "https://cache.agilebits.com/dist/1P/op2/pkg/${OP_CLI_VERSION}/op_linux_${ARCH}_${OP_CLI_VERSION}.zip"
     curl -sSfLo op.zip "https://cache.agilebits.com/dist/1P/op2/pkg/${OP_CLI_VERSION}/op_linux_${ARCH}_${OP_CLI_VERSION}.zip"
     $SUDO unzip -od "$PARAM_PATH" op.zip && rm op.zip
 elif [[ "$OSTYPE" == "darwin"* ]]; then
