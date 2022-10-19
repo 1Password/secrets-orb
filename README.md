@@ -7,16 +7,16 @@ This orb is officially supported and maintained by 1Password, but community cont
 
 ## Including the orb in your project
 
-In order to include the latest version of 1Password Secrets CircleCI Orb in your project, add the following in your `config.yml`:
-```yaml
-orbs:
-  1password: onepassword/secrets@volatile
-```
-
 In order to include a specific version of the orb:
 ```yaml
 orbs:
   1password: onepassword/secrets@0.1.0
+```
+
+In order to include the latest version of 1Password Secrets CircleCI Orb in your project, add the following in your `config.yml`:
+```yaml
+orbs:
+  1password: onepassword/secrets@volatile
 ```
 
 ## Authentication
