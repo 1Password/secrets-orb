@@ -7,6 +7,27 @@ filters: &filters
   tags:
     only: /.*/
 
+executors:
+  docker: &docker-executor
+    docker:
+      - image: cimg/base:current
+  linux-arm:
+    machine:
+      image: ubuntu-2004:current
+    resource_class: arm.medium
+  linux-amd64:
+    machine:
+      image: ubuntu-2204:current
+  macos: 
+    macos:
+      xcode: 14.0.0
+  windows-2022:
+    machine:
+      image: windows-server-2022-gui:current
+  windows-2019:
+    machine:
+      image: windows-server-2019-gui:current
+
 jobs:
   # Create a job to test the commands of your orbs.
   # You may want to add additional validation steps to ensure the commands are working as expected.
@@ -104,24 +125,3 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
-
-executors:
-  docker: &docker-executor
-    docker:
-      - image: cimg/base:current
-  linux-arm:
-    machine:
-      image: ubuntu-2004:current
-    resource_class: arm.medium
-  linux-amd64:
-    machine:
-      image: ubuntu-2204:current
-  macos: 
-    macos:
-      xcode: 14.0.0
-  windows-2022:
-    machine:
-      image: windows-server-2022-gui:current
-  windows-2019:
-    machine:
-      image: windows-server-2019-gui:current
