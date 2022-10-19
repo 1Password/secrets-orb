@@ -7,8 +7,13 @@ filters: &filters
   tags:
     only: /.*/
 
+# Currently not all OSs are tested. Although the list of OSs (i.e. executors)
+# is complete, we don't use all of them in the pipeline.
+# This is currently blocked by the fact that we deploy Connect in the pipeline.
+# When we have a publicly deployed Connect for testing, we can enable all OSs and
+# continue improving the orb.
 executors:
-  docker: &docker-executor
+  docker:
     docker:
       - image: cimg/base:current
   linux-arm:
@@ -42,11 +47,6 @@ jobs:
       MULTILINE_SECRET: op://acceptance-tests/multiline-secret/notesPlain
     steps:
       - checkout
-      - when:
-          condition: 
-            equal: [ *docker-executor, << parameters.os >> ]
-          steps:
-            - setup_remote_docker
       - run:
           command: echo $OP_CREDENTIALS >> 1password-credentials.json
       - run:
@@ -67,11 +67,6 @@ jobs:
     executor: << parameters.os >>
     steps:
       - checkout
-      - when:
-          condition: 
-            equal: [ *docker-executor, << parameters.os >> ]
-          steps:
-            - setup_remote_docker
       - run:
           command: echo $OP_CREDENTIALS >> 1password-credentials.json
       - run:
