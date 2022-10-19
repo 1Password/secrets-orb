@@ -16,7 +16,7 @@ executors:
   docker:
     docker:
       - image: cimg/base:current
-  linux-arm:
+  linux-arm64:
     machine:
       image: ubuntu-2004:current
     resource_class: arm.medium
@@ -52,7 +52,7 @@ jobs:
       - run:
           command: docker-compose -f test/docker-compose.yaml up -d
       # Run your orb's commands to validate them.
-      - 1password/install-op
+      - 1password/install-cli
       - run:
           name: 1Password CLI should be installed
           command: op --version
@@ -72,7 +72,7 @@ jobs:
       - run:
           command: docker-compose -f test/docker-compose.yaml up -d
       # Run your orb's commands to validate them.
-      - 1password/install-op
+      - 1password/install-cli
       - run:
           name: 1Password CLI should be installed
           command: op --version

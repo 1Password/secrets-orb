@@ -13,7 +13,6 @@ parameters:
     description: Flags to pass to the `op run` command
 
 steps:
-  - install-op
   - run:
       name: << parameters.step-name >>
       environment:
