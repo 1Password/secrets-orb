@@ -98,12 +98,12 @@ workflows:
           filters: *filters
           matrix:
             parameters:
-              os: ["linux-amd64", "linux-arm"]
+              os: ["linux-amd64", "linux-arm64"]
       - integration-test-export:
           filters: *filters
           matrix:
             parameters:
-              os: ["linux-amd64", "linux-arm"]
+              os: ["linux-amd64", "linux-arm64"]
       - orb-tools/pack:
           filters: *filters
       - orb-tools/publish:
