@@ -20,13 +20,12 @@ jobs:
       SECRET_IN_SECTION: op://acceptance-tests/test-secret/test-section/password
       MULTILINE_SECRET: op://acceptance-tests/multiline-secret/notesPlain
     steps:
-      steps:
+      - checkout
       - when:
           condition: 
             equal: [ docker, << parameters.os >>]
           steps:
             - setup_remote_docker
-      - checkout
       - run:
           command: echo $OP_CREDENTIALS >> 1password-credentials.json
       - run:
@@ -46,12 +45,12 @@ jobs:
         type: executor
     executor: << parameters.os >>
     steps:
+      - checkout
       - when:
           condition: 
             equal: [ docker, << parameters.os >>]
           steps:
             - setup_remote_docker
-      - checkout
       - run:
           command: echo $OP_CREDENTIALS >> 1password-credentials.json
       - run:
