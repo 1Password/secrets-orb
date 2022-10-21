@@ -5,31 +5,11 @@
 The 1Password Secrets CircleCI Orb allows loading secrets from 1Password into CircleCI CI/CD pipelines, and syncing them automatically, therefore, removing the risk of exposing sensitive values.
 This orb is officially supported and maintained by 1Password, but community contributions are welcome.
 
-## Including the orb in your project
-
-In order to include a specific version of the orb:
-```yaml
-orbs:
-  1password: onepassword/secrets@0.1.0
-```
-
-In order to include the latest version of 1Password Secrets CircleCI Orb in your project, add the following in your `config.yml`:
-```yaml
-orbs:
-  1password: onepassword/secrets@volatile
-```
-
-## Authentication
-
-The 1Password CircleCI orb relies on using 1Password Secrets Automation by running a 1Password Connect Server as well as a 1Password Connect token. For instructions on how to set up Secrets Automation and deploy Connect, please refer to the [official documentation](https://developer.1password.com/docs/connect).
-
-Once you have a 1Password Connect host and token, configure `OP_CONNECT_HOST` and `OP_CONNECT_TOKEN` environment variables respectively.
-
 ## Usage
 
 You can make secrets available to the CircleCI jobs/steps by including references to them in the environment. References are of the form `op://vault/item/[section]/field`.
 
-In order to install the `op` CLI within a CircleCI job, the `1password/install-cli` command is available:
+In order to install the 1Password CLI within a CircleCI job, the `1password/install-cli` command is available:
 ```yml
 version: 2.1
 orbs:
@@ -120,6 +100,26 @@ workflows:
 ```
 
 More examples are available in the `src/examples` directory.
+
+## Including the orb in your project
+
+In order to include a specific version of the orb:
+```yaml
+orbs:
+  1password: onepassword/secrets@0.1.0
+```
+
+In order to include the latest version of 1Password Secrets CircleCI Orb in your project, add the following in your `config.yml`:
+```yaml
+orbs:
+  1password: onepassword/secrets@volatile
+```
+
+## Authentication
+
+The 1Password CircleCI orb relies on using 1Password Secrets Automation by running a 1Password Connect Server as well as a 1Password Connect token. For instructions on how to set up Secrets Automation and deploy Connect, please refer to the [official documentation](https://developer.1password.com/docs/connect).
+
+Once you have a 1Password Connect host and token, configure `OP_CONNECT_HOST` and `OP_CONNECT_TOKEN` environment variables respectively.
 
 ## Masking
 
