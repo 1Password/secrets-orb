@@ -41,6 +41,10 @@ jobs:
       os:
         type: executor
     executor: << parameters.os >>
+    environment:
+      SECRET: op://acceptance-tests/test-secret/password
+      SECRET_IN_SECTION: op://acceptance-tests/test-secret/test-section/password
+      MULTILINE_SECRET: op://acceptance-tests/multiline-secret/notesPlain
     steps:
       - checkout
       - run:
@@ -54,10 +58,6 @@ jobs:
           command: op --version
       - 1password/exec:
           step-name: "Validate secret injection at runtime"
-          environment:
-            SECRET: op://acceptance-tests/test-secret/password
-            SECRET_IN_SECTION: op://acceptance-tests/test-secret/test-section/password
-            MULTILINE_SECRET: op://acceptance-tests/multiline-secret/notesPlain
           command: ./test/assert-env-set.sh
           
   integration-test-export:
