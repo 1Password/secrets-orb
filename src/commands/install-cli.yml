@@ -1,0 +1,25 @@
+description: >
+  Install the 1Password CLI. Defaults to latest stable version.
+
+parameters:
+  version:
+    type: string
+    default: 2.7.1
+    description: Version of 1Password CLI that will be installed
+  path:
+    type: string
+    default: /usr/local/bin/
+    description: Path where 1Password CLI will be installed
+  shell:
+    type: string
+    default: /bin/bash -eo pipefail
+    description: The shell used to run the install script
+
+steps:
+  - run:
+      environment:
+        PARAM_PATH: <<parameters.path>>
+        PARAM_CLI_VERSION: <<parameters.version>>
+      shell: <<parameters.shell>>
+      name: Install 1Password CLI
+      command: <<include(scripts/install-cli.sh)>>

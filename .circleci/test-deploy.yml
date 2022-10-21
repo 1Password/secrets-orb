@@ -1,28 +1,109 @@
 version: 2.1
 orbs:
-  secrets: onepassword/secrets@dev:<<pipeline.git.revision>>
+  1password: onepassword/secrets@dev:<<pipeline.git.revision>>
   orb-tools: circleci/orb-tools@11.1
 
 filters: &filters
   tags:
     only: /.*/
 
+# Currently not all OSs are tested. Although the list of OSs (i.e. executors)
+# is complete, we don't use all of them in the pipeline.
+# This is currently blocked by the fact that we deploy Connect in the pipeline.
+# When we have a publicly deployed Connect for testing, we can enable all OSs and
+# continue improving the orb.
+executors:
+  docker:
+    docker:
+      - image: cimg/base:current
+  linux-arm64:
+    machine:
+      image: ubuntu-2004:current
+    resource_class: arm.medium
+  linux-amd64:
+    machine:
+      image: ubuntu-2204:current
+  macos: 
+    macos:
+      xcode: 14.0.0
+  windows-2022:
+    machine:
+      image: windows-server-2022-gui:current
+  windows-2019:
+    machine:
+      image: windows-server-2019-gui:current
+
 jobs:
   # Create a job to test the commands of your orbs.
   # You may want to add additional validation steps to ensure the commands are working as expected.
-  command-tests:
-    docker:
-      - image: cimg/base:current
+  integration-test-exec:
+    parameters:
+      os:
+        type: executor
+    executor: << parameters.os >>
+    environment:
+      SECRET: op://acceptance-tests/test-secret/password
+      SECRET_IN_SECTION: op://acceptance-tests/test-secret/test-section/password
+      MULTILINE_SECRET: op://acceptance-tests/multiline-secret/notesPlain
     steps:
       - checkout
+      - run:
+          command: echo $OP_CREDENTIALS >> 1password-credentials.json
+      - run:
+          command: docker-compose -f test/docker-compose.yaml up -d
       # Run your orb's commands to validate them.
-      - secrets/greet
+      - 1password/install-cli
+      - run:
+          name: 1Password CLI should be installed
+          command: op --version
+      - 1password/exec:
+          step-name: "Validate secret injection at runtime"
+          command: ./test/assert-env-set.sh
+          
+  integration-test-export:
+    parameters:
+      os:
+        type: executor
+    executor: << parameters.os >>
+    steps:
+      - checkout
+      - run:
+          command: echo $OP_CREDENTIALS >> 1password-credentials.json
+      - run:
+          command: docker-compose -f test/docker-compose.yaml up -d
+      # Run your orb's commands to validate them.
+      - 1password/install-cli
+      - run:
+          name: 1Password CLI should be installed
+          command: op --version
+      - 1password/export:
+          var-name: SECRET
+          secret-reference: op://acceptance-tests/test-secret/password
+      - 1password/export:
+          var-name: SECRET_IN_SECTION
+          secret-reference: op://acceptance-tests/test-secret/test-section/password
+      - 1password/export:
+          var-name: MULTILINE_SECRET
+          secret-reference: op://acceptance-tests/multiline-secret/notesPlain
+      - run:
+          name: validate exported environment variables
+          command: ./test/assert-env-set.sh
+
+
 workflows:
   test-deploy:
     jobs:
       # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
-      - command-tests:
+      - integration-test-exec:
           filters: *filters
+          matrix:
+            parameters:
+              os: ["linux-amd64", "linux-arm64"]
+      - integration-test-export:
+          filters: *filters
+          matrix:
+            parameters:
+              os: ["linux-amd64", "linux-arm64"]
       - orb-tools/pack:
           filters: *filters
       - orb-tools/publish:
@@ -31,7 +112,8 @@ workflows:
           pub-type: production
           requires:
             - orb-tools/pack
-            - command-tests
+            - integration-test-exec
+            - integration-test-export
           context: orb-publishing
           filters:
             branches:

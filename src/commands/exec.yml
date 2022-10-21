@@ -1,0 +1,21 @@
+description: Run a command with secret environment variables loaded from 1Password
+parameters:
+  command:
+    type: string
+    description: Command to execute with secrets
+  step-name:
+    type: string
+    default: ''
+    description: Title of the step to show in the CircleCI UI
+  flags:
+    type: string
+    default: ''
+    description: Flags to pass to the `op run` command
+
+steps:
+  - run:
+      name: << parameters.step-name >>
+      environment:
+        PARAM_FLAGS: << parameters.flags >>
+        PARAM_COMMAND: << parameters.command >>
+      command: <<include(scripts/exec.sh)>>

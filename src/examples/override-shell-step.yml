@@ -1,0 +1,27 @@
+description: >
+  Install the op CLI and set it as the shell on the run command level.
+usage:
+  version: 2.1
+  orbs:
+    1password: onepassword/secrets@0.1.0
+  jobs:
+    deploy:
+      machine:
+        image: ubuntu-2204:current
+      steps:
+        - 1password/install
+        - checkout
+        - run:
+            shell: op run -- /bin/bash
+            environment:
+              AWS_ACCESS_KEY_ID: op://company/app/aws/access_key_id
+              AWS_SECRET_ACCESS_KEY: op://company/app/aws/secret_access_key
+            command: |
+              echo "This value will be masked: $AWS_ACCESS_KEY_ID"
+              echo "This value will be masked: $AWS_SECRET_ACCESS_KEY"
+              ./deploy-my-app.sh
+
+  workflows:
+    deploy:
+      jobs:
+        - deploy

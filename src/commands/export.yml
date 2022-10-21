@@ -1,0 +1,19 @@
+description: >
+  Load a secret and make it available as an environment variable for next steps in the job.
+  Unlike the 1password/exec command, 1password/export does not conceal secrets from the logs.
+
+parameters:
+  var-name:
+    type: string
+    description: Name of the environment variable to populate with the secret
+  secret-reference:
+    type: string
+    description: Reference to where the secret is stored in 1Password
+
+steps:
+  - run:
+      name: Load secret << parameters.var-name >>
+      environment:
+        PARAM_VAR_NAME: << parameters.var-name >>
+        PARAM_SECRET_REFERENCE: << parameters.secret-reference >>
+      command: <<include(scripts/export.sh)>>

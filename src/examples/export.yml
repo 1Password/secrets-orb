@@ -1,0 +1,29 @@
+description: >
+  Use the 1password/export command to load the secrets with references exported in the environment, and make the available to the subsequent steps of the job.
+  Unlike 1password/exec, the export command does not mask the secret values from the logs.
+usage:
+  version: 2.1
+  orbs:
+    1password: onepassword/secrets@0.1.0
+  jobs:
+    deploy:
+      machine:
+        image: ubuntu-2204:current
+      steps:
+        - checkout
+        - 1password/export:
+            var-name: AWS_ACCESS_KEY_ID
+            secret-reference: op://company/app/aws/access_key_id
+        - 1password/export:
+            var-name: AWS_SECRET_ACCESS_KEY
+            secret-reference: op://company/app/aws/secret_access_key
+        - run:
+            command: |
+              echo "This value will not be masked: $AWS_ACCESS_KEY_ID"
+              echo "This value will not be masked: $AWS_SECRET_ACCESS_KEY"
+              ./deploy-my-app.sh
+
+  workflows:
+    deploy:
+      jobs:
+        - deploy
