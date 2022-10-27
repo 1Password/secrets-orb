@@ -3,7 +3,7 @@ version: 2.1
 description: >
   Load secrets from 1Password into your CircleCI jobs, through a Connect server, deployed in your infrastructure.
 
-  For more information about setting up Secrets Automation and deploying Connect, more information can be found [here](https://developer.1password.com/docs/connect/get-started).
+  For more information about setting up Secrets Automation and deploying Connect, check out the 1Password Developer Documentation.
 
 # This information will be displayed in the orb registry and is not mandatory.
 display:

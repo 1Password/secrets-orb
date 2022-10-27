@@ -1,5 +1,5 @@
 description: >
-  Load a secret and make it available as an environment variable for next steps in the job.
+  Load a secret and make it available as an environment variable for next steps within the same job.
   Unlike the 1password/exec command, 1password/export does not conceal secrets from the logs.
 
 parameters:

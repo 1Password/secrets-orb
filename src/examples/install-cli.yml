@@ -9,7 +9,7 @@ usage:
       machine:
         image: ubuntu-2204:current
       steps:
-        - 1password/install
+        - 1password/install-cli
         - checkout
         - run: |
             docker login -u $(op read op://company/docker/username) -p $(op read op://company/docker/password)
