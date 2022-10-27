@@ -5,7 +5,7 @@ usage:
   version: 2.1
   orbs:
     1password: onepassword/secrets@0.1.0
-    docker: circleci/docker@1.0.0
+    docker: circleci/docker@2.1.4
   jobs:
     deploy:
       machine:
@@ -15,7 +15,8 @@ usage:
         AWS_SECRET_ACCESS_KEY: op://company/app/aws/secret_access_key
       shell: op run -- /bin/bash
       steps:
-        - 1password/install
+        - 1password/install-cli:
+            shell: /bin/bash -eo pipefail
         - checkout
         - docker/build:
             step-name: build image
