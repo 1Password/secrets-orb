@@ -1,4 +1,10 @@
 #!/bin/bash
+
+# User-Agent info for 1Password CLI
+export OP_INTEGRATION_NAME="1Password CircleCI Secrets Orb"
+export OP_INTEGRATION_ID="CIR"
+export OP_INTEGRATION_BUILDNUMBER="1000001"
+
 random_heredoc_identifier=$(env LC_ALL=C tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 64 | head -n 1) || true
 {
     #shellcheck disable=SC2016
