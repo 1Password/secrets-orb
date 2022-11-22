@@ -10,6 +10,7 @@ usage:
       machine:
         image: ubuntu-2204:current
       steps:
+        - 1password/install-cli
         - checkout
         - 1password/export:
             var-name: AWS_ACCESS_KEY_ID
