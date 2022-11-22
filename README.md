@@ -13,7 +13,7 @@ In order to install the 1Password CLI within a CircleCI job, the `1password/inst
 ```yml
 version: 2.1
 orbs:
-  1password: onepassword/secrets@x.y.z
+  1password: onepassword/secrets@1.0.0
 
 jobs:
   deploy:
@@ -45,7 +45,7 @@ workflows:
 ```yml 
 version: 2.1
 orbs:
-  1password: onepassword/secrets@x.y.z
+  1password: onepassword/secrets@1.0.0
 
 jobs:
   deploy:
@@ -75,7 +75,7 @@ In order to resolve variables at a job level, `1password/export` can be used:
 ```yml 
 version: 2.1
 orbs:
-  1password: onepassword/secrets@x.y.z
+  1password: onepassword/secrets@1.0.0
 
 jobs:
   deploy:
@@ -108,7 +108,7 @@ More examples are available in the `src/examples` directory.
 In order to include a specific version of the orb:
 ```yaml
 orbs:
-  1password: onepassword/secrets@0.1.0
+  1password: onepassword/secrets@1.0.0
 ```
 
 In order to include the latest version of 1Password Secrets CircleCI Orb in your project, add the following in your `config.yml`:

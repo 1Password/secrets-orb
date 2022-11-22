@@ -4,7 +4,7 @@ description: >
 usage:
   version: 2.1
   orbs:
-    1password: onepassword/secrets@0.1.0
+    1password: onepassword/secrets@1.0.0
   jobs:
     deploy:
       machine:
