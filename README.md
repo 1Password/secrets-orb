@@ -2,15 +2,28 @@
 
 [![CircleCI Build Status](https://circleci.com/gh/1Password/secrets-orb.svg?style=shield "CircleCI Build Status")](https://circleci.com/gh/1Password/secrets-orb) [![CircleCI Orb Version](https://badges.circleci.com/orbs/onepassword/secrets.svg)](https://circleci.com/orbs/registry/orb/onepassword/secrets) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/1Password/secrets-orb/main/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
 
-The 1Password Secrets CircleCI Orb allows loading secrets from 1Password into CircleCI CI/CD pipelines, and syncing them automatically, therefore, removing the risk of exposing sensitive values.
+With 1Password Secrets orb for CircleCI, you can load secrets from 1Password into CircleCI CI/CD pipelines and sync them automatically. Using this orb removes the risk of exposing plaintext secrets in code.
+
 This orb is officially supported and maintained by 1Password, but community contributions are welcome.
 
-## Usage
+Read more on the [1Password Developer Portal](https://developer.1password.com/ci-cd/circle-ci). 
 
-You can make secrets available to the CircleCI jobs/steps by including references to them in the environment. References are of the form `op://vault/item/[section]/field`.
+## Requirements
 
-In order to install the 1Password CLI within a CircleCI job, the `1password/install-cli` command is available:
-```yml
+Before you get started, you'll need to:
+
+- Sign up for 1Password ([Get 50% off your first year](https://start.1password.com/sign-up?c=DEV2022)).
+- [Set up a Secrets Automation workflow](https://developer.1password.com/docs/connect/get-started#step-1-set-up-a-secrets-automation-workflow).
+- [Deploy 1Password Connect](https://developer.1password.com/docs/connect/get-started#step-2-deploy-1password-connect-server) in your infrastructure.
+- Set the `OP_CONNECT_HOST` and `OP_CONNECT_TOKEN` environment variables on the [CircleCI settings page](https://circleci.com/docs/settings/) to your Connect instance's credentials so that it'll be used to load secrets.
+
+## Usage examples
+
+### Install 1Password CLI within a Circle CI job
+
+1Password CLI needs to be available to the pipeline for the orb to function. You can install the CLI as the first step of a CircleCI job using the `1password/install-cli` command. Once installed, you can use 1Password CLI commands in subsequent steps in the pipeline.
+
+```yaml
 version: 2.1
 orbs:
   1password: onepassword/secrets@1.0.0
@@ -40,9 +53,39 @@ workflows:
 ```
 
 <details>
-  <summary> Alternative using `1password/exec` command</summary>
+    <summary>Another example, with Docker</summary>
 
-```yml 
+```yaml
+description: >
+  Install 1Password CLI within a job and make it useable for all the commands following the installation.
+usage:
+  version: 2.1
+  orbs:
+    1password: onepassword/secrets@1.0.0
+  jobs:
+    deploy:
+      machine:
+        image: ubuntu-2204:current
+      steps:
+        - 1password/install-cli
+        - checkout
+        - run: |
+            docker login -u $(op read op://company/docker/username) -p $(op read op://company/docker/password)
+            docker build -t company/app:${CIRCLE_SHA1:0:7} .
+            docker push company/app:${CIRCLE_SHA1:0:7}
+  workflows:
+    deploy:
+      jobs:
+        - deploy
+```
+
+</details>
+
+### Load secrets with the `1password/exec` command
+
+First, install 1Password CLI with `1password/install-cli`. Then use the `1password/exec` command to load secrets on demand and execute commands requiring secrets. Sensitive values that may be accidentally logged will be masked. After adding the `1password/exec` command as a step in your job, you can execute commands that require secrets.
+
+```yaml
 version: 2.1
 orbs:
   1password: onepassword/secrets@1.0.0
@@ -55,8 +98,8 @@ jobs:
       AWS_ACCESS_KEY_ID: op://company/app/aws/access_key_id
       AWS_SECRET_ACCESS_KEY: op://company/app/aws/secret_access_key
     steps:
-      - 1password/install-cli
       - checkout
+      - 1password/install-cli
       - 1password/exec:
           command: |
             echo "This value will be masked: $AWS_ACCESS_KEY_ID"
@@ -68,11 +111,16 @@ workflows:
       - deploy
 ```
 
-</details>
+### Load secrets with the `1password/export` command
 
-In order to resolve variables at a job level, `1password/export` can be used:
+You can use `1password/export` to resolve variables at the job level.
 
-```yml 
+First, install 1Password CLI with `1password/install-cli`. Then use the `1password/export` command to load the secrets with references exported in the environment. The secrets will then be available to subsequent steps of the job.
+
+_Note: Unlike `1password/exec`, the export command does not mask the secret values from the logs._
+
+
+```yaml
 version: 2.1
 orbs:
   1password: onepassword/secrets@1.0.0
@@ -82,8 +130,8 @@ jobs:
     machine:
         image: ubuntu-2204:current
     steps:
-      - 1password/install-cli
       - checkout
+      - 1password/install-cli
       - 1password/export:
             var-name: AWS_ACCESS_KEY_ID
             secret-reference: op://company/app/aws/access_key_id
@@ -101,50 +149,46 @@ workflows:
       - deploy
 ```
 
-More examples are available in the `src/examples` directory.
 
 ## Including the orb in your project
 
-In order to include a specific version of the orb:
+To include a specific version of the orb, add the following in your `config.yml` file (replace `1.0.0` with the desired version number):
+
 ```yaml
 orbs:
   1password: onepassword/secrets@1.0.0
 ```
 
-In order to include the latest version of 1Password Secrets CircleCI Orb in your project, add the following in your `config.yml`:
+To include the *latest* version of 1Password Secrets orb in your project, add the following:
+
 ```yaml
 orbs:
   1password: onepassword/secrets@volatile
 ```
 
-## Authentication
-
-The 1Password CircleCI orb relies on using 1Password Secrets Automation by running a 1Password Connect Server as well as a 1Password Connect token. For instructions on how to set up Secrets Automation and deploy Connect, please refer to the [official documentation](https://developer.1password.com/docs/connect).
-
-Once you have a 1Password Connect host and token, configure `OP_CONNECT_HOST` and `OP_CONNECT_TOKEN` environment variables respectively.
-
 ## Masking
 
-When using either the `1password/exec` orb command or the `op run` shell wrapper, all secrets are automatically masked from the CI log output. If secrets (accidentally) get logged, they will be replaced with:
-`<concealed by 1Password>`
+When using either the `1password/exec` orb command or the [`op run`](https://developer.1password.com/docs/cli/reference/commands/run) shell wrapper, all secrets are automatically masked from the CI log output. If secrets accidentally get logged, they will be replaced with `<concealed by 1Password>`.
+
+If you use the `1password/export` command, secrets aren't masked.
 
 ## Resources
 
-[CircleCI Orb Registry Page](https://circleci.com/orbs/registry/orb/onepassword/secrets) - The official registry page of this orb for all versions, executors, commands, and jobs described.
+- [1Password Secrets orb CircleCI registry page <i className="fas fa-external-link"></i>](https://circleci.com/orbs/registry/orb/onepassword/secrets). This official registry page contains information on all versions and commands.
+- Learn more about using [CircleCI orbs. <i className="fas fa-external-link"></i>](https://circleci.com/docs/orb-intro/)
 
-[CircleCI Orb Docs](https://circleci.com/docs/2.0/orb-intro/#section=configuration) - Docs for using, creating, and publishing CircleCI Orbs.
-### How to Contribute
+## How to Contribute
 
-We welcome [issues](https://github.com/1Password/secrets-orb/issues) to and [pull requests](https://github.com/1Password/secrets-orb/pulls) against this repository!
+We welcome creating [issues](https://github.com/1Password/secrets-orb/issues) in and [pull requests](https://github.com/1Password/secrets-orb/pulls) against the `secrets-orb` repository!
 
 ## Security
 
 1Password requests you practice responsible disclosure if you discover a vulnerability.
 
-Please file requests via [**BugCrowd**](https://bugcrowd.com/agilebits).
+Please file requests through [BugCrowd](https://bugcrowd.com/agilebits).
 
-For information about security practices, please visit our [Security homepage](https://bugcrowd.com/agilebits).
+For information about our security practices, visit the [1Password Security homepage](https://1password.com/security).
 
 ## Getting help
 
-If you find yourself stuck, visit our [**Support Page**](https://support.1password.com/) for help.
+If you find yourself stuck, visit our [**Support Page**](https://developer.1password.com/ci-cd) for help.
