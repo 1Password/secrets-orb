@@ -12,7 +12,6 @@ Read more on the [1Password Developer Portal](https://developer.1password.com/ci
 
 Before you get started, you'll need to:
 
-- Sign up for 1Password ([Get 50% off your first year](https://start.1password.com/sign-up?c=DEV2022)).
 - [Set up a Secrets Automation workflow](https://developer.1password.com/docs/connect/get-started#step-1-set-up-a-secrets-automation-workflow).
 - [Deploy 1Password Connect](https://developer.1password.com/docs/connect/get-started#step-2-deploy-1password-connect-server) in your infrastructure.
 - Set the `OP_CONNECT_HOST` and `OP_CONNECT_TOKEN` environment variables on the [CircleCI settings page](https://circleci.com/docs/settings/) to your Connect instance's credentials so that it'll be used to load secrets.
