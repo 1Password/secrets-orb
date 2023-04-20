@@ -4,7 +4,7 @@
 
 With the 1Password Secrets orb for CircleCI, you can load secrets from 1Password into CircleCI CI/CD pipelines and sync them automatically. Using this orb removes the risk of exposing plaintext secrets in code.
 
-You can use the orb with [1Password Connect Server](https://developer.1password.com/docs/connect) or a [1Password Service Account](https://developer.1password.com/docs/service-accounts)<sup>BETA</sup>.
+You can use the orb with [1Password Connect Server](https://developer.1password.com/docs/connect) or a [1Password Service Account <sup>BETA</sup>](https://developer.1password.com/docs/service-accounts).
 
 This orb is officially supported and maintained by 1Password, but community contributions are welcome.
 
@@ -18,7 +18,7 @@ Before you get started, if you want to use Connect, you'll need to:
 - [Deploy 1Password Connect](https://developer.1password.com/docs/connect/get-started#step-2-deploy-1password-connect-server) in your infrastructure.
 - On the [CircleCI settings page](https://circleci.com/docs/settings/), set the `OP_CONNECT_HOST` and `OP_CONNECT_TOKEN` environment variables to your Connect instance's credentials so that it'll be used to load secrets.
 
-If you want to use Service Accounts<sup>BETA</sup>, you'll need to:
+If you want to use Service Accounts <sup>BETA</sup>, you'll need to:
 
 - [Create a service account.](https://developer.1password.com//docs/service-accounts/)
 - On the [CircleCI settings page](https://circleci.com/docs/settings/), set the `OP_SERVICE_ACCOUNT_TOKEN` environment variable to your service account's credentials so that it'll be used to load secrets.
@@ -59,7 +59,7 @@ workflows:
       - deploy
 ```
 
-If you want to use the orb with a [1Password Service Account](/docs/service-accounts/)<sup>BETA</sup>, specify a beta version of the command-line tool (`2.16.0-beta.01` or later).
+If you want to use the orb with a [1Password Service Account <sup>BETA</sup>](https://developer.1password.com/docs/service-accounts/), specify a beta version of the command-line tool (`2.16.0-beta.01` or later).
 
 ```yaml
 version: 2.1
