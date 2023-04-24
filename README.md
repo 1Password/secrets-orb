@@ -2,19 +2,28 @@
 
 [![CircleCI Build Status](https://circleci.com/gh/1Password/secrets-orb.svg?style=shield "CircleCI Build Status")](https://circleci.com/gh/1Password/secrets-orb) [![CircleCI Orb Version](https://badges.circleci.com/orbs/onepassword/secrets.svg)](https://circleci.com/orbs/registry/orb/onepassword/secrets) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/1Password/secrets-orb/main/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
 
-With 1Password Secrets orb for CircleCI, you can load secrets from 1Password into CircleCI CI/CD pipelines and sync them automatically. Using this orb removes the risk of exposing plaintext secrets in code.
+With the 1Password Secrets orb for CircleCI, you can load secrets from 1Password into CircleCI CI/CD pipelines and sync them automatically. Using this orb removes the risk of exposing plaintext secrets in code.
+
+You can use the orb with [1Password Connect Server](https://developer.1password.com/docs/connect) or a [1Password Service Account <sup>BETA</sup>](https://developer.1password.com/docs/service-accounts).
 
 This orb is officially supported and maintained by 1Password, but community contributions are welcome.
 
-Read more on the [1Password Developer Portal](https://developer.1password.com/ci-cd/circle-ci). 
+Read more on the [1Password Developer Portal](https://developer.1password.com/ci-cd/circle-ci).
 
 ## Requirements
 
-Before you get started, you'll need to:
+Before you get started, if you want to use Connect, you'll need to:
 
 - [Set up a Secrets Automation workflow](https://developer.1password.com/docs/connect/get-started#step-1-set-up-a-secrets-automation-workflow).
 - [Deploy 1Password Connect](https://developer.1password.com/docs/connect/get-started#step-2-deploy-1password-connect-server) in your infrastructure.
-- Set the `OP_CONNECT_HOST` and `OP_CONNECT_TOKEN` environment variables on the [CircleCI settings page](https://circleci.com/docs/settings/) to your Connect instance's credentials so that it'll be used to load secrets.
+- On the [CircleCI settings page](https://circleci.com/docs/settings/), set the `OP_CONNECT_HOST` and `OP_CONNECT_TOKEN` environment variables to your Connect instance's credentials so that it'll be used to load secrets.
+
+If you want to use Service Accounts <sup>BETA</sup>, you'll need to:
+
+- [Create a service account.](https://developer.1password.com//docs/service-accounts/)
+- On the [CircleCI settings page](https://circleci.com/docs/settings/), set the `OP_SERVICE_ACCOUNT_TOKEN` environment variable to your service account's credentials so that it'll be used to load secrets.
+
+**NOTE:** If either `OP_CONNECT_HOST` or `OP_CONNECT_TOKEN` environment variables have been set alongside `OP_SERVICE_ACCOUNT_TOKEN`, the Connect credentials will take precedence over the provided service account token. You must unset the Connect environment variables to ensure the action uses the service account token.
 
 ## Usage examples
 
@@ -30,7 +39,7 @@ orbs:
 jobs:
   deploy:
     machine:
-        image: ubuntu-2204:current
+      image: ubuntu-2204:current
     steps:
       - 1password/install-cli
       - checkout
@@ -44,6 +53,36 @@ jobs:
             echo "This value will be masked: $AWS_SECRET_ACCESS_KEY"
             ./deploy-my-app.sh
 
+workflows:
+  deploy:
+    jobs:
+      - deploy
+```
+
+If you want to use the orb with a [1Password Service Account <sup>BETA</sup>](https://developer.1password.com/docs/service-accounts/), specify a beta version of the command-line tool (`2.16.0-beta.01` or later).
+
+```yaml
+version: 2.1
+orbs:
+  1password: onepassword/secrets@1.0.0
+
+jobs:
+  deploy:
+    machine:
+      image: ubuntu-2204:current
+    steps:
+      - 1password/install-cli:
+          version: 2.16.0-beta.01
+      - checkout
+      - run:
+          shell: op run -- /bin/bash
+          environment:
+            AWS_ACCESS_KEY_ID: op://company/app/aws/access_key_id
+            AWS_SECRET_ACCESS_KEY: op://company/app/aws/secret_access_key
+          command: |
+            echo "This value will be masked: $AWS_ACCESS_KEY_ID"
+            echo "This value will be masked: $AWS_SECRET_ACCESS_KEY"
+            ./deploy-my-app.sh
 
 workflows:
   deploy:
@@ -92,7 +131,7 @@ orbs:
 jobs:
   deploy:
     machine:
-        image: ubuntu-2204:current
+      image: ubuntu-2204:current
     environment:
       AWS_ACCESS_KEY_ID: op://company/app/aws/access_key_id
       AWS_SECRET_ACCESS_KEY: op://company/app/aws/secret_access_key
@@ -118,7 +157,6 @@ First, install 1Password CLI with `1password/install-cli`. Then use the `1passwo
 
 _Note: Unlike `1password/exec`, the export command does not mask the secret values from the logs._
 
-
 ```yaml
 version: 2.1
 orbs:
@@ -127,16 +165,16 @@ orbs:
 jobs:
   deploy:
     machine:
-        image: ubuntu-2204:current
+      image: ubuntu-2204:current
     steps:
       - checkout
       - 1password/install-cli
       - 1password/export:
-            var-name: AWS_ACCESS_KEY_ID
-            secret-reference: op://company/app/aws/access_key_id
+          var-name: AWS_ACCESS_KEY_ID
+          secret-reference: op://company/app/aws/access_key_id
       - 1password/export:
-            var-name: AWS_SECRET_ACCESS_KEY
-            secret-reference: op://company/app/aws/secret_access_key
+          var-name: AWS_SECRET_ACCESS_KEY
+          secret-reference: op://company/app/aws/secret_access_key
       - run:
           command: |
             echo "This value will not be masked: $AWS_ACCESS_KEY_ID"
@@ -148,7 +186,6 @@ workflows:
       - deploy
 ```
 
-
 ## Including the orb in your project
 
 To include a specific version of the orb, add the following in your `config.yml` file (replace `1.0.0` with the desired version number):
@@ -158,7 +195,7 @@ orbs:
   1password: onepassword/secrets@1.0.0
 ```
 
-To include the *latest* version of 1Password Secrets orb in your project, add the following:
+To include the _latest_ version of 1Password Secrets orb in your project, add the following:
 
 ```yaml
 orbs:
