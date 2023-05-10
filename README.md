@@ -59,7 +59,7 @@ workflows:
       - deploy
 ```
 
-If you want to use the orb with a [1Password Service Account](https://developer.1password.com/docs/service-accounts/), specify a beta version of the command-line tool (`2.16.0-beta.01` or later).
+If you want to use the orb with a [1Password Service Account](https://developer.1password.com/docs/service-accounts/), specify the 1Password CLI version (`2.18.0` or later).
 
 ```yaml
 version: 2.1
@@ -72,7 +72,7 @@ jobs:
       image: ubuntu-2204:current
     steps:
       - 1password/install-cli:
-          version: 2.16.0-beta.01
+          version: 2.18.0
       - checkout
       - run:
           shell: op run -- /bin/bash
