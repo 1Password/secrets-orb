@@ -1,4 +1,7 @@
 # shellcheck disable=SC2148
+
+# Error exit
+set -e
 # Colors
 NO_COLOR="\033[0m"
 OK_COLOR="\033[32;01m"
