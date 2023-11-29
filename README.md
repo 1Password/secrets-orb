@@ -72,7 +72,7 @@ jobs:
       image: ubuntu-2204:current
     steps:
       - 1password/install-cli:
-          version: 2.22.0
+          version: 2.23.0
       - checkout
       - run:
           shell: op run -- /bin/bash
