@@ -20,7 +20,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Install op-cli
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+if [[ "$OSTYPE" == "linux"* ]]; then
     ARCH=$(uname -m)
     if [ "$(getconf LONG_BIT)" = 32 ]; then
         ARCH="386"
